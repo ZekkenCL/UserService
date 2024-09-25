@@ -1,18 +1,14 @@
 # Usa una imagen oficial de .NET SDK para construir la aplicación
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-# Usa una imagen oficial de .NET SDK para construir y publicar la app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet restore "./UserService.csproj"
 RUN dotnet publish "./UserService.csproj" -c Release -o /app/publish
 
-# Usa la imagen base para copiar y ejecutar la aplicación publicada
-FROM base AS final
+# Usa una imagen base de .NET Runtime para ejecutar la aplicación
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "UserService.dll"] # Reemplaza con el nombre de tu DLL
+ENTRYPOINT ["dotnet", "UserService.dll"]
