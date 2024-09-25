@@ -8,7 +8,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
 
 builder.Services.AddDbContext<UserDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString(connectionString)));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddControllers();
 
